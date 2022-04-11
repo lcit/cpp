@@ -113,6 +113,8 @@ class Entity{
 	
 public:
 	String m_string;
+  
+  Entity() = default;
 	
 	/*
 	We use Entity as:
@@ -186,13 +188,14 @@ public:
 	template<typename T>
 	Entity(T&& string)
 		: m_string(std::forward<T>(string)){ // makes a copy if Entity e(s);
-                                             // makes move if Entity e(std::move(s));
+                                         // makes move if Entity e(std::move(s));
 		std::puts(__PRETTY_FUNCTION__);
 	}	
 	
 	void print(){
 		std::cout << "Entity print: " << std::endl; 
 		m_string.print();
+    std::cout << std::endl;
 	}	
 };
 
@@ -202,6 +205,42 @@ int main(){
 	//Entity e(s);
 	Entity e(std::move(s));
 	e.print();
+  
+  
+  
+  
+  
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+  
+  
+  
+  // the following is with perfect forwarding implementation
+  
+  Entity e2("e2"); // String ctor
+  e2.print();
+  
+  Entity e3(String("e3")); // String ctor + move ctor
+  e3.print();
+  
+  Entity e4; 
+  e4 = "e4"; // String ctor + move assignement
+  e4.print();
+  
+  Entity e5;
+  e5 = String("e5"); // String ctor + move ctor + move assignement
+  e5.print();  
+  
+  Entity e6;
+  String s2("e6"); // String ctor
+  e6 = s2; // copy ctor + move assignement
+  e6.print(); 
+
+  Entity e7;
+  String s3("e7"); // String ctor
+  e7 = std::move(s3); // move ctor + move assignement
+  e7.print(); 
 	
 	return 0;
 }
