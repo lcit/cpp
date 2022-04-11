@@ -186,7 +186,7 @@ public:
 	template<typename T>
 	Entity(T&& string)
 		: m_string(std::forward<T>(string)){ // makes a copy if Entity e(s);
-											 // makes move if Entity e(std::move(s));
+                                             // makes move if Entity e(std::move(s));
 		std::puts(__PRETTY_FUNCTION__);
 	}	
 	
