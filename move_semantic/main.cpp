@@ -9,11 +9,20 @@ If you define a copy constructor then there will be no implicit move ctors or mo
 
 class String{
 	
+private:
+  char* data = nullptr;
+  std::size_t size = 0;  
+  
 public:
 
   // we explicitely provide a default constructor that do not initiate the member variables
   // the compiler otherwise would provide one that initilizes the members with some default values like 0 (I think)
   String() = default;
+  
+  ~String(){
+    delete data;
+    data = nullptr;
+  }
 
   // constructor
   String(const char* string){
@@ -25,77 +34,64 @@ public:
 
   // copy constructor
   String(const String& string){
-    std::cout << "String copy constructor";
+    std::cout << "String copy constructor" << std::endl;
     size = string.size;
-    if(data){
-      std::cout << " + delete data";
-      delete data;
-    }
     data = new char[size];
-    memcpy(data, string.data, size);		
-    std::cout << std::endl;
+    memcpy(data, string.data, size);
   }
+  
+  // move constructor
+  String(String&& string){
+    std::cout << "String move constructor" << std::endl;
 
+    size = string.size;
+    data = string.data;
+
+    string.data = nullptr;
+    string.size = 0;
+  }	
+
+  
   // copy assignement operator
   // a string "leo" is a const char*. If we assign string = "leo"
   // we call the String constructor first then the this copy operator!!!
   String& operator=(const String& string){
-    std::cout << "String copy assignement operator";
-    size = string.size;
-    if(data){
-      std::cout << " + delete data";
-      delete data;
+    std::cout << "String copy assignement operator" << std::endl;
+    
+    if(this != &string){
+      size = string.size;
+      data = new char[size];
+      memcpy(data, string.data, size);
     }
-    data = new char[size];
-    memcpy(data, string.data, size);		
-    std::cout << std::endl;
+    
+    return *this;
   }
 
   // copy assignement operator 2
   String& operator=(const char* string){
-    std::cout << "String copy assignement operator";
+    std::cout << "String copy assignement operator (const char*)" << std::endl;
+    
     size = strlen(string);
-    if(data){
-      std::cout << " + delete data";
-      delete data;
-    }
     data = new char[size];
     memcpy(data, string, size);		
-    std::cout << std::endl;
+    
+    return *this;
   }
 
   String& operator=(String&& string){
-    std::cout << "String move assignement operator";
-    size = string.size;
-    if(data){
-      std::cout << " + delete data";
+    std::cout << "String move assignement operator" << std::endl;
+    
+    if(this != &string){
       delete data;
+
+      size = string.size;
+      data = string.data;
+
+      string.data = nullptr;
+      string.size = 0;
     }
-    data = string.data;
-
-    string.data = nullptr;
-    string.size = 0;
-
-    std::cout << std::endl;
+    return *this;
   }	
-	
-  String(String&& string){
-    std::cout << "String move constructor";
-    size = string.size;
-    if(data){
-      std::cout << " + delete data";
-      delete data;
-    }
-    data = string.data;
-
-    string.data = nullptr;
-    string.size = 0;
-
-    std::cout << std::endl;
-  }	
-	
-	//String(String&& string) = default;
-	//String(String&& string) = delete;
 	
   void print(){
     for(int i=0; i<size; ++i){
@@ -103,10 +99,6 @@ public:
     }
     std::cout << std::endl;
   }
-	
-private:
-  char* data = nullptr;
-  std::size_t size = 0;
 };
 
 class Entity{
