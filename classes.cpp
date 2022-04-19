@@ -44,6 +44,7 @@ public:
   // This function overrides Abstract::e().
   // The override specificer will check that the signarue of A::e() is the same of Abstarct::e().
   void e() override 
+           final    // final means that if a class inherit from A it cannot override e().
   {
   }
 
@@ -82,6 +83,7 @@ auto main() -> int {
   Abstract* c = &a;
   c->f(3);  // same as above
   c->g(4);
+
  
   return 0;
 }
