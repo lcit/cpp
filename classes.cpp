@@ -58,6 +58,7 @@ public:
 
   inline    // the call to e() is replaced with the implementation if e() 
   // static // a static object is created only once and shared.
+  [[nodiscard]] // the compiler issue a warning if the output of this fuction is not used.
   void aa() const    // members of the class cannot be modified.
             noexcept // this function does not throw exceptions
   {
